@@ -1,0 +1,17 @@
+{
+  "miniprogramRoot": "./dist",
+  "projectname": "project-taro",
+  "description": "这是一个构建 TARO 项目的模板库",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": true,
+    "bigPackageSizeSupport": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.3.5"
+}
