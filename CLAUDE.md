@@ -55,6 +55,22 @@ config/                 # Taro 构建配置（基于 Vite）
 types/                  # TypeScript 类型定义
 ```
 
+### 开发规范
+
+#### 请求模式
+
+每个页面有对应的 `*.service.js` 文件：
+
+```javascript
+import { safeRequest } from '@/utils';
+
+export const query = (params) => (
+  safeRequest.Get(`/xxx/_query`, { params })
+);
+
+export default { query };
+```
+
 ### 关键模式
 
 **HTTP 请求** (`src/utils/safeRequest.ts`):
