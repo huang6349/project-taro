@@ -6,20 +6,24 @@ import { token } from '@/utils';
 import { delay } from '@/utils';
 import { eq } from 'lodash-es';
 
-// 安全请求实例，自动处理 Token 和错误
+const {
+  TARO_APP_BASE_URL,
+} = process.env;
+
+// 基于 alova 的请求封装：自动注入 Token、刷新 Token、401 跳转、业务错误处理
 const safeRequest = createAlova({
   requestAdapter: axiosRequestAdapter(),
   statesHook: ReactHook,
   shareRequest: !1,
   cacheFor: null,
-  baseURL: process.env.TARO_APP_BASE_URL,
+  baseURL: TARO_APP_BASE_URL,
   timeout: 15 * 1000,
   async beforeRequest(method) {
     // 请求前添加 Token
     method.config.headers['satoken'] = await token.get();
   },
   responded: {
-    // 请求成功
+    // HTTP 成功响应（状态码 2xx），但需处理业务逻辑
     async onSuccess(response) {
       try {
         const {
@@ -27,15 +31,13 @@ const safeRequest = createAlova({
           data: res,
         } = response as any;
         await delay(350);
-        // 响应头新的 satoken 存入本地
+        // 响应头返回新 satoken 时自动续期
         const satoken = header?.satoken;
         satoken && token.set(satoken);
-        // 401 清除 Token
-        const is = eq(res?.code, 401);
-        is && token.remove();
-        // 业务失败抛出错误
-        if (eq(res?.success, !1))
-          errorThrower(res);
+        // 401 说明登录失效，清除凭证并跳转登录页
+        eq(res?.code, 401) && token.remove();
+        // 业务响应失败时抛出错误
+        eq(res?.success, !1) && errorThrower(res);
         return res;
       } catch (error) {
         const {
@@ -45,7 +47,7 @@ const safeRequest = createAlova({
         return res;
       }
     },
-    // 请求错误
+    // HTTP 请求失败（网络错误、超时等）
     async onError() {
       await showToast({
         title: '请求没有得到响应，请检查网络设置',
@@ -56,7 +58,7 @@ const safeRequest = createAlova({
   },
 });
 
-// 错误展示类型
+// 业务错误展示类型：决定错误如何呈现给用户
 enum ErrorShowType {
   SILENT = 0,        // 静默
   WARN_MESSAGE = 1,  // 警告
@@ -65,7 +67,7 @@ enum ErrorShowType {
   REDIRECT = 9,      // 重定向
 }
 
-// 错误处理函数
+// 处理业务错误（BizError）和网络错误
 const errorHandler = async (error: any) => {
   if (eq(error.name, 'BizError')) {
     if (error.info) {
@@ -116,7 +118,7 @@ const errorHandler = async (error: any) => {
   }
 };
 
-// 业务错误抛出函数
+// 构造业务错误并抛出，由 errorHandler 统一处理
 const errorThrower = (res: any) => {
   const {
     success,
