@@ -1,5 +1,6 @@
 import type { UserConfigExport } from '@tarojs/cli';
 import vitePluginImp from 'vite-plugin-imp';
+import path from 'path';
 
 // 环境变量：项目名称、App 名称（RN）
 const {
@@ -18,8 +19,8 @@ const config: UserConfigExport<'vite'> = {
     // NutUI 组件使用 375 基准
     if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1)
       return 375;
-    // 项目代码使用 375 基准
-    return 375;
+    // 项目代码使用 750 基准
+    return 750;
   },
   // 设备像素比：设计稿宽度 -> 像素比
   deviceRatio: {
@@ -34,11 +35,21 @@ const config: UserConfigExport<'vite'> = {
   outputRoot: 'dist',
   // Taro 插件
   plugins: [
-    '@tarojs/plugin-generator',
     '@tarojs/plugin-html',
+    '@tarojs/plugin-http',
   ],
   // 全局常量
   defineConstants: {},
+  // 路径别名
+  alias: {
+    '@/assets': path.resolve(__dirname, '..', 'src/assets'),
+    '@/components': path.resolve(__dirname, '..', 'src/components'),
+    '@/constants': path.resolve(__dirname, '..', 'src/constants'),
+    '@/hocs': path.resolve(__dirname, '..', 'src/hocs'),
+    '@/hofs': path.resolve(__dirname, '..', 'src/hofs'),
+    '@/hooks': path.resolve(__dirname, '..', 'src/hooks'),
+    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
+  },
   // 文件复制配置
   copy: {
     patterns: [],
