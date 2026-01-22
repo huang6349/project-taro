@@ -42,9 +42,15 @@ src/
 ├── app.js              # 根组件
 ├── app.config.js       # 小程序页面、窗口、导航栏配置
 ├── app.scss            # 全局样式
+├── assets/             # 静态资源
+├── components/         # 通用组件
 ├── constants/          # 常量
+├── hocs/               # 高阶组件
+├── hofs/               # 高阶函数
+├── hooks/              # 自定义 Hooks
 ├── pages/              # 页面组件
 ├── utils/              # 工具函数
+├── index.html          # 入口 HTML
 config/                 # Taro 构建配置（基于 Vite）
 types/                  # TypeScript 类型定义
 ```
@@ -53,10 +59,21 @@ types/                  # TypeScript 类型定义
 
 **HTTP 请求** (`src/utils/safeRequest.ts`):
 
-- 使用 `alova` + `@alova/adapter-taro` 发送请求
+- 使用 `alova` + `@alova/adapter-axios` 发送请求
 - 自动从 Token 存储注入 `satoken` 请求头
 - 401 响应会清除 Token 并触发跳转
 - 通过响应头处理 Token 刷新
+
+**高阶函数** (`src/hofs/`):
+
+- `withResponse` - 响应包装器，校验 `success` 后执行回调
+
+**工具函数** (`src/utils/`):
+
+- `hasValue` / `isNil` / `isNilOrEmpty` - 空值判断
+- `safeEq` - 安全相等比较
+- `token` - Token 管理
+- `delay` - 延迟函数
 
 **状态管理**:
 
