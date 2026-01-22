@@ -2,9 +2,9 @@ import { createAlova } from 'alova';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import ReactHook from 'alova/react';
 import { showToast } from '@tarojs/taro';
+import { safeEq } from '@/utils';
 import { token } from '@/utils';
 import { delay } from '@/utils';
-import { eq } from 'lodash-es';
 
 const {
   TARO_APP_BASE_URL,
@@ -35,9 +35,9 @@ const safeRequest = createAlova({
         const satoken = header?.satoken;
         satoken && token.set(satoken);
         // 401 说明登录失效，清除凭证并跳转登录页
-        eq(res?.code, 401) && token.remove();
+        safeEq(res?.code, 401) && token.remove();
         // 业务响应失败时抛出错误
-        eq(res?.success, !1) && errorThrower(res);
+        safeEq(res?.success, !1) && errorThrower(res);
         return res;
       } catch (error) {
         const {
@@ -69,7 +69,7 @@ enum ErrorShowType {
 
 // 处理业务错误（BizError）和网络错误
 const errorHandler = async (error: any) => {
-  if (eq(error.name, 'BizError')) {
+  if (safeEq(error.name, 'BizError')) {
     if (error.info) {
       const {
         errorMessage,
@@ -127,7 +127,7 @@ const errorThrower = (res: any) => {
     code: errorCode,
     showType,
   } = res;
-  if (eq(success, !0)) return;
+  if (safeEq(success, !0)) return;
   const error: any = new Error(errorMessage);
   error.name = 'BizError';
   error.info = {
