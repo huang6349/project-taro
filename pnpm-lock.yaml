@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@alova/adapter-taro':
-        specifier: 2.0.14
-        version: 2.0.14(alova@3.3.4)
+      '@alova/adapter-axios':
+        specifier: 2.0.17
+        version: 2.0.17(alova@3.3.4)(axios@1.13.2)
       '@babel/runtime':
         specifier: 7.24.8
         version: 7.24.8
@@ -32,6 +32,9 @@ importers:
       '@tarojs/plugin-html':
         specifier: 4.1.10
         version: 4.1.10(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@tarojs/runtime@4.1.10)(@tarojs/shared@4.1.10)
+      '@tarojs/plugin-http':
+        specifier: 4.1.10
+        version: 4.1.10(@tarojs/runtime@4.1.10)(@tarojs/shared@4.1.10)(@tarojs/taro@4.1.10(@tarojs/components@4.1.10(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5))(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@tarojs/shared@4.1.10)(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5))
       '@tarojs/plugin-platform-alipay':
         specifier: 4.1.10
         version: 4.1.10(@tarojs/service@4.1.10(@swc/helpers@0.5.18))(@tarojs/shared@4.1.10)
@@ -71,6 +74,9 @@ importers:
       alova:
         specifier: 3.3.4
         version: 3.3.4
+      axios:
+        specifier: 1.13.2
+        version: 1.13.2
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -153,10 +159,11 @@ importers:
 
 packages:
 
-  '@alova/adapter-taro@2.0.14':
-    resolution: {integrity: sha512-JoEx/engKCmtLm7r1DU9Y9bjzBLePGcEdyoCNZkXtRWIgUxayXx8l34m2M+5Tuio7UXyp3RCBB3j2awZe4UMaw==}
+  '@alova/adapter-axios@2.0.17':
+    resolution: {integrity: sha512-wKb+gKmU9jStj/YgWG/haqoqEE/1d5Q0b+42DPo1UgwDOGflNG9K+X/65B7aE6dzOhndXfce9l6xZtlPcm2t3w==}
     peerDependencies:
       alova: ^3.0.20
+      axios: '>=0.4.0'
 
   '@alova/shared@1.3.1':
     resolution: {integrity: sha512-ijSOaFLUFcVzMKSY3avoEE5C03/p9atjMDPBwvNkwnzaCrhv6/m4A121NdadF8YlHCRuifyYfz90IyEdMXTsJg==}
@@ -1685,6 +1692,14 @@ packages:
       '@tarojs/helper': 4.1.10
       '@tarojs/runtime': 4.1.10
       '@tarojs/shared': 4.1.10
+
+  '@tarojs/plugin-http@4.1.10':
+    resolution: {integrity: sha512-raCHl0/v91UVyEM1hqLyerEVLOQ4apU2f2XRTwi6NBeedv/M4IS6ImOdBah6M4YOb+ChPvrp/a2DxQNBKLvJPg==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@tarojs/runtime': 4.1.10
+      '@tarojs/shared': 4.1.10
+      '@tarojs/taro': 4.1.10
 
   '@tarojs/plugin-platform-alipay@4.1.10':
     resolution: {integrity: sha512-BEIXuAPSzk4Ijl3dyH8TpExP9Lt2hVmo1xMBLI6luSOf87L97P8bYfO93qUUCPMj+Q19kyz5XyzBHq2ZjRrUZg==}
@@ -5135,10 +5150,11 @@ packages:
 
 snapshots:
 
-  '@alova/adapter-taro@2.0.14(alova@3.3.4)':
+  '@alova/adapter-axios@2.0.17(alova@3.3.4)(axios@1.13.2)':
     dependencies:
       '@alova/shared': 1.3.2
       alova: 3.3.4
+      axios: 1.13.2
 
   '@alova/shared@1.3.1': {}
 
@@ -6765,6 +6781,12 @@ snapshots:
       '@tarojs/helper': 4.1.10(@swc/helpers@0.5.18)
       '@tarojs/runtime': 4.1.10
       '@tarojs/shared': 4.1.10
+
+  '@tarojs/plugin-http@4.1.10(@tarojs/runtime@4.1.10)(@tarojs/shared@4.1.10)(@tarojs/taro@4.1.10(@tarojs/components@4.1.10(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5))(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@tarojs/shared@4.1.10)(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5))':
+    dependencies:
+      '@tarojs/runtime': 4.1.10
+      '@tarojs/shared': 4.1.10
+      '@tarojs/taro': 4.1.10(@tarojs/components@4.1.10(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5))(@tarojs/helper@4.1.10(@swc/helpers@0.5.18))(@tarojs/shared@4.1.10)(@types/react@18.0.38)(postcss@8.5.6)(rollup@3.29.5)
 
   '@tarojs/plugin-platform-alipay@4.1.10(@tarojs/service@4.1.10(@swc/helpers@0.5.18))(@tarojs/shared@4.1.10)':
     dependencies:

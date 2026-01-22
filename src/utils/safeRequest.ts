@@ -1,5 +1,6 @@
 import { createAlova } from 'alova';
-import AdapterTaro from '@alova/adapter-taro';
+import { axiosRequestAdapter } from '@alova/adapter-axios';
+import ReactHook from 'alova/react';
 import { showToast } from '@tarojs/taro';
 import { token } from '@/utils';
 import { delay } from '@/utils';
@@ -7,7 +8,8 @@ import { eq } from 'lodash-es';
 
 // 安全请求实例，自动处理 Token 和错误
 const safeRequest = createAlova({
-  ...AdapterTaro(),
+  requestAdapter: axiosRequestAdapter(),
+  statesHook: ReactHook,
   shareRequest: !1,
   cacheFor: null,
   baseURL: process.env.TARO_APP_BASE_URL,
