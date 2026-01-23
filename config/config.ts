@@ -1,6 +1,5 @@
 import type { UserConfigExport } from '@tarojs/cli';
-import vitePluginImp from 'vite-plugin-imp';
-import path from 'path';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 // 环境变量：项目名称、App 名称（RN）
 const {
@@ -9,7 +8,7 @@ const {
 } = process.env;
 
 // 基础/通用配置
-const config: UserConfigExport<'vite'> = {
+const config: UserConfigExport<'webpack5'> = {
   // 项目名称
   projectName: TARO_APP_PROJECT,
   // 项目创建日期
@@ -40,16 +39,6 @@ const config: UserConfigExport<'vite'> = {
   ],
   // 全局常量
   defineConstants: {},
-  // 路径别名
-  alias: {
-    '@/assets': path.resolve(__dirname, '..', 'src/assets'),
-    '@/components': path.resolve(__dirname, '..', 'src/components'),
-    '@/constants': path.resolve(__dirname, '..', 'src/constants'),
-    '@/hocs': path.resolve(__dirname, '..', 'src/hocs'),
-    '@/hofs': path.resolve(__dirname, '..', 'src/hofs'),
-    '@/hooks': path.resolve(__dirname, '..', 'src/hooks'),
-    '@/utils': path.resolve(__dirname, '..', 'src/utils'),
-  },
   // 文件复制配置
   copy: {
     patterns: [],
@@ -59,25 +48,13 @@ const config: UserConfigExport<'vite'> = {
   framework: 'react',
   // 编译器配置
   compiler: {
-    type: 'vite',
-    // Vite 插件：自动导入组件样式
-    vitePlugins: [
-      vitePluginImp({
-        libList: [{
-          libName: '@nutui/nutui-react-taro',
-          // 组件样式路径
-          style: (name) => `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style/style.css`,
-          // 是否将组件名转为中划线格式
-          camel2DashComponentName: !1,
-          // 是否替换旧导入方式
-          replaceOldImport: !1,
-        }],
-      }),
-    ],
+    type: 'webpack5',
+    prebundle: {
+      enable: !1,
+    },
   },
-  // SASS 全局变量文件
-  sass: {
-    resource: ['node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss'],
+  cache: {
+    enable: !1,
   },
   // 小程序配置
   mini: {
@@ -96,6 +73,9 @@ const config: UserConfigExport<'vite'> = {
         },
       },
     },
+    webpackChain(chain) {
+      chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
+    },
   },
   // H5 配置
   h5: {
@@ -103,6 +83,10 @@ const config: UserConfigExport<'vite'> = {
     publicPath: '/',
     // 静态资源目录
     staticDirectory: 'static',
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[chunkhash:8].js',
+    },
     // CSS 提取配置
     miniCssExtractPluginOption: {
       ignoreOrder: !0,
@@ -123,6 +107,9 @@ const config: UserConfigExport<'vite'> = {
           generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
       },
+    },
+    webpackChain(chain) {
+      chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
     },
   },
   // React Native 配置
