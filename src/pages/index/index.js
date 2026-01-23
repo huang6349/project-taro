@@ -3,7 +3,7 @@ import { Text } from '@tarojs/components';
 import './index.scss';
 
 const IndexPage = () => {
-  return (<View>
+  return (<View className="m-auto">
     <Text>Hello world!</Text>
   </View>);
 };

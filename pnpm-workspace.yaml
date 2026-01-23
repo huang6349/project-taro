@@ -5,3 +5,4 @@ onlyBuiltDependencies:
   - core-js
   - core-js-pure
   - esbuild
+  - weapp-tailwindcss

@@ -1,4 +1,7 @@
 import type { UserConfigExport } from '@tarojs/cli';
+import type { Plugin } from 'vite';
+import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite';
+import tailwindcss from 'tailwindcss';
 import vitePluginImp from 'vite-plugin-imp';
 import path from 'path';
 
@@ -60,8 +63,27 @@ const config: UserConfigExport<'vite'> = {
   // 编译器配置
   compiler: {
     type: 'vite',
-    // Vite 插件：自动导入组件样式
+    // Vite 插件
     vitePlugins: [
+      // 小程序 TailwindCSS 插件：rem 转 rpx、注入 CSS 变量作用域
+      UnifiedViteWeappTailwindcssPlugin({
+        rem2rpx: !0,
+        // H5/Harmony/RN 平台禁用（使用 rem 而非 rpx）
+        disabled: process.env.TARO_ENV === 'h5'
+          || process.env.TARO_ENV === 'harmony'
+          || process.env.TARO_ENV === 'rn',
+        injectAdditionalCssVarScope: !0,
+      }),
+      {
+        // PostCSS 配置加载插件：将 tailwindcss 注入到 postcss 配置中
+        name: 'postcss-config-loader-plugin',
+        config(config) {
+          if (typeof config.css?.postcss === 'object') {
+            config.css?.postcss?.plugins?.unshift(tailwindcss());
+          }
+        },
+      } as Plugin,
+      // 组件库样式自动导入插件：按需导入 NutUI 组件样式
       vitePluginImp({
         libList: [{
           libName: '@nutui/nutui-react-taro',
