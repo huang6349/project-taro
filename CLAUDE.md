@@ -99,12 +99,36 @@ export default { query };
 **UI 组件**:
 
 - `@nutui/nutui-react-taro` - Taro 优化的组件库
+- `@nutui/icons-react-taro` - 图标组件库
+- `tailwindcss` - 原子化 CSS
 - 样式使用 SASS，包含 NutUI 变量
+
+**CSS 处理**:
+
+- `vite-plugin-imp` - 按需导入组件样式
+- `autoprefixer` - H5 自动添加 CSS 前缀
+- `clsx` - 类名拼接工具
+
+**工具库**:
+
+- `lodash-es` - 工具函数集合（ESM 版本）
 
 ### 配置文件
 
 - `config/config.ts` - Taro 主配置（编译器、框架、插件）
+- `config/postcss.config.js` - PostCSS 配置（TailwindCSS、Autoprefixer）
+- `tailwind.config.js` - TailwindCSS 配置
 - `src/app.config.js` - 小程序应用配置（页面、窗口）
 - `tsconfig.json` - TypeScript 配置，包含路径别名（`@/*`）
 - `.env.development` - 开发环境变量
 - `.env.production` - 生产环境变量
+
+### CSS 单位转换规则
+
+| 平台    | px 转换     | NutUI 基准 |
+|-------|-----------|----------|
+| H5    | px -> rem | 750px    |
+| 小程序   | px -> rpx | 750px    |
+| NutUI | 375px     | -        |
+
+- NutUI 组件样式无需转换（已在设计稿 375px 基准下）
