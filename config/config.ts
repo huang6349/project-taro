@@ -74,15 +74,15 @@ const config: UserConfigExport<'vite'> = {
           || process.env.TARO_ENV === 'rn',
         injectAdditionalCssVarScope: !0,
       }),
+      // PostCSS 配置加载插件：将 tailwindcss 注入到 postcss 配置中
       {
-        // PostCSS 配置加载插件：将 tailwindcss 注入到 postcss 配置中
         name: 'postcss-config-loader-plugin',
         config(config) {
           if (typeof config.css?.postcss === 'object') {
             config.css?.postcss?.plugins?.unshift(tailwindcss());
           }
         },
-      } as Plugin,
+      },
       // 组件库样式自动导入插件：按需导入 NutUI 组件样式
       vitePluginImp({
         libList: [{
@@ -95,7 +95,7 @@ const config: UserConfigExport<'vite'> = {
           replaceOldImport: !1,
         }],
       }),
-    ],
+    ] as Plugin[],
   },
   // SASS 全局变量文件
   sass: {
