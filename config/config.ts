@@ -53,6 +53,7 @@ const config: UserConfigExport<'webpack5'> = {
       enable: !1,
     },
   },
+  // Webpack 持久化缓存
   cache: {
     enable: !1,
   },
@@ -64,6 +65,13 @@ const config: UserConfigExport<'webpack5'> = {
         enable: !0,
         config: {},
       },
+      // CSS 中 url 图片转换
+      url: {
+        enable: !0,
+        config: {
+          limit: 1024,
+        },
+      },
       // CSS Modules 配置
       cssModules: {
         enable: !1,
@@ -73,8 +81,17 @@ const config: UserConfigExport<'webpack5'> = {
         },
       },
     },
-    webpackChain(chain) {
-      chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
+    // CSS 提取配置
+    miniCssExtractPluginOption: {
+      ignoreOrder: !0,
+    },
+    // 主包优化
+    optimizeMainPackage: {
+      enable: !0,
+    },
+    webpackChain({ resolve }) {
+      resolve.plugin('tsconfig-paths')
+        .use(TsconfigPathsPlugin);
     },
   },
   // H5 配置
@@ -83,6 +100,7 @@ const config: UserConfigExport<'webpack5'> = {
     publicPath: '/',
     // 静态资源目录
     staticDirectory: 'static',
+    // 输出配置
     output: {
       filename: 'js/[name].[hash:8].js',
       chunkFilename: 'js/[name].[chunkhash:8].js',
@@ -94,6 +112,11 @@ const config: UserConfigExport<'webpack5'> = {
       chunkFilename: 'css/[name].[chunkhash].css',
     },
     postcss: {
+      // px 转 rem
+      pxtransform: {
+        enable: !0,
+        config: {},
+      },
       // Autoprefixer 自动添加前缀
       autoprefixer: {
         enable: !0,
@@ -108,8 +131,9 @@ const config: UserConfigExport<'webpack5'> = {
         },
       },
     },
-    webpackChain(chain) {
-      chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin);
+    webpackChain({ resolve }) {
+      resolve.plugin('tsconfig-paths')
+        .use(TsconfigPathsPlugin);
     },
   },
   // React Native 配置
