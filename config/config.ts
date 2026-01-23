@@ -50,12 +50,19 @@ const config: UserConfigExport<'webpack5'> = {
   compiler: {
     type: 'webpack5',
     prebundle: {
-      enable: !1,
+      exclude: [
+        '@nutui/nutui-react-taro',
+        '@nutui/icons-react-taro',
+      ],
     },
   },
   // Webpack 持久化缓存
   cache: {
     enable: !1,
+  },
+  // SASS 全局变量文件
+  sass: {
+    data: '@import "@nutui/nutui-react-taro/dist/styles/variables.scss";',
   },
   // 小程序配置
   mini: {
@@ -63,7 +70,9 @@ const config: UserConfigExport<'webpack5'> = {
       // px 转 rpx
       pxtransform: {
         enable: !0,
-        config: {},
+        config: {
+          selectorBlackList: ['nut-'],
+        },
       },
       // CSS 中 url 图片转换
       url: {
@@ -115,7 +124,9 @@ const config: UserConfigExport<'webpack5'> = {
       // px 转 rem
       pxtransform: {
         enable: !0,
-        config: {},
+        config: {
+          selectorBlackList: ['nut-'],
+        },
       },
       // Autoprefixer 自动添加前缀
       autoprefixer: {
