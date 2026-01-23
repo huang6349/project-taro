@@ -14,22 +14,12 @@ module.exports = {
         return `react-use/${libraryDirectory}/${name}`;
       },
     }, 'react-use'],
-    ['import', {
-      libraryName: '@nutui/nutui-react-taro',
-      camel2DashComponentName: !1,
-      customStyleName(/** @type {string} */ name) {
-        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style`;
-      },
-      customName(/** @type {string} */ name) {
-        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}`;
-      },
-    }, 'nutui-react'],
   ],
   presets: [
     ['taro', {
       framework: 'react',
       ts: !0,
-      compiler: 'webpack5',
+      compiler: 'vite',
     }],
   ],
 };
