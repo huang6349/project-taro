@@ -88,7 +88,7 @@ const config: UserConfigExport<'vite'> = {
         libList: [{
           libName: '@nutui/nutui-react-taro',
           // 组件样式路径
-          style: (name) => `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style/style.css`,
+          style: (name) => `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style`,
           // 是否将组件名转为中划线格式
           camel2DashComponentName: !1,
           // 是否替换旧导入方式
@@ -99,7 +99,7 @@ const config: UserConfigExport<'vite'> = {
   },
   // SASS 全局变量文件
   sass: {
-    resource: ['node_modules/@nutui/nutui-react-taro/dist/styles/variables.scss'],
+    data: '@import "@nutui/nutui-react-taro/dist/styles/variables.scss";',
   },
   // 小程序配置
   mini: {
