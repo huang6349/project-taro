@@ -4,6 +4,8 @@ module.exports = {
   plugins: [],
   theme: { extend: {} },
   corePlugins: {
-    preflight: process.env.TARO_ENV === 'h5',
+    preflight: process.env.TARO_ENV === 'h5'
+      || process.env.TARO_ENV === 'harmony'
+      || process.env.TARO_ENV === 'rn',
   },
 };
