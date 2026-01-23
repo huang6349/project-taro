@@ -22,8 +22,8 @@ const config: UserConfigExport<'vite'> = {
     // NutUI 组件使用 375 基准
     if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1)
       return 375;
-    // 项目代码使用 750 基准
-    return 750;
+    // 项目代码使用 375 基准
+    return 375;
   },
   // 设备像素比：设计稿宽度 -> 像素比
   deviceRatio: {
