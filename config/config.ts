@@ -1,8 +1,6 @@
 import type { UserConfigExport } from '@tarojs/cli';
-import type { Plugin } from 'vite';
-import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite';
-import tailwindcss from 'tailwindcss';
-import vitePluginImp from 'vite-plugin-imp';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import { UnifiedWebpackPluginV5 } from 'weapp-tailwindcss/webpack';
 import path from 'path';
 
 // 环境变量：项目名称、App 名称（RN）
@@ -12,7 +10,7 @@ const {
 } = process.env;
 
 // 基础/通用配置
-const config: UserConfigExport<'vite'> = {
+const config: UserConfigExport<'webpack5'> = {
   // 项目名称
   projectName: TARO_APP_PROJECT,
   // 项目创建日期
@@ -62,40 +60,17 @@ const config: UserConfigExport<'vite'> = {
   framework: 'react',
   // 编译器配置
   compiler: {
-    type: 'vite',
-    // Vite 插件
-    vitePlugins: [
-      // 小程序 TailwindCSS 插件：rem 转 rpx、注入 CSS 变量作用域
-      UnifiedViteWeappTailwindcssPlugin({
-        rem2rpx: !0,
-        // H5/Harmony/RN 平台禁用（使用 rem 而非 rpx）
-        disabled: process.env.TARO_ENV === 'h5'
-          || process.env.TARO_ENV === 'harmony'
-          || process.env.TARO_ENV === 'rn',
-        injectAdditionalCssVarScope: !0,
-      }),
-      // PostCSS 配置加载插件：将 tailwindcss 注入到 postcss 配置中
-      {
-        name: 'postcss-config-loader-plugin',
-        config(config) {
-          if (typeof config.css?.postcss === 'object') {
-            config.css?.postcss?.plugins?.unshift(tailwindcss());
-          }
-        },
-      },
-      // 组件库样式自动导入插件：按需导入 NutUI 组件样式
-      vitePluginImp({
-        libList: [{
-          libName: '@nutui/nutui-react-taro',
-          // 组件样式路径
-          style: (name) => `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style`,
-          // 是否将组件名转为中划线格式
-          camel2DashComponentName: !1,
-          // 是否替换旧导入方式
-          replaceOldImport: !1,
-        }],
-      }),
-    ] as Plugin[],
+    type: 'webpack5',
+    prebundle: {
+      exclude: [
+        '@nutui/nutui-react-taro',
+        '@nutui/icons-react-taro',
+      ],
+    },
+  },
+  // Webpack 持久化缓存
+  cache: {
+    enable: !1,
   },
   // SASS 全局变量文件
   sass: {
@@ -135,6 +110,21 @@ const config: UserConfigExport<'vite'> = {
     optimizeMainPackage: {
       enable: !0,
     },
+    webpackChain(chain) {
+      chain.resolve.plugin('tsconfig-paths')
+        .use(TsconfigPathsPlugin);
+      chain.merge({
+        plugin: {
+          install: {
+            plugin: UnifiedWebpackPluginV5,
+            args: [{
+              appType: 'taro',
+              rem2rpx: !0,
+            }],
+          },
+        },
+      });
+    },
   },
   // H5 配置
   h5: {
@@ -142,6 +132,11 @@ const config: UserConfigExport<'vite'> = {
     publicPath: '/',
     // 静态资源目录
     staticDirectory: 'static',
+    // 输出配置
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[chunkhash:8].js',
+    },
     // CSS 提取配置
     miniCssExtractPluginOption: {
       ignoreOrder: !0,
@@ -169,6 +164,10 @@ const config: UserConfigExport<'vite'> = {
           generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
       },
+    },
+    webpackChain(chain) {
+      chain.resolve.plugin('tsconfig-paths')
+        .use(TsconfigPathsPlugin);
     },
   },
   // React Native 配置

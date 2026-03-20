@@ -4,6 +4,6 @@ import devConfig from './config.dev';
 import config from './config';
 import isDev from './isDev';
 
-export default defineConfig<'vite'>((merge) => (
+export default defineConfig<'webpack5'>((merge) => (
   merge({}, config, (isDev ? devConfig : prodConfig))),
 );

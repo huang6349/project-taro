@@ -39,7 +39,7 @@ npm run build:harmony-hybrid  # 鸿蒙混合
 
 ```
 src/
-├── app.js              # 根组件
+├── app.jsx              # 根组件
 ├── app.config.js       # 小程序页面、窗口、导航栏配置
 ├── app.scss            # 全局样式
 ├── assets/             # 静态资源
@@ -61,7 +61,7 @@ types/                  # TypeScript 类型定义
 
 每个页面有对应的 `*.service.js` 文件：
 
-```javascript
+```
 import { safeRequest } from '@/utils';
 
 export const query = (params) => (
@@ -105,7 +105,7 @@ export default { query };
 
 **CSS 处理**:
 
-- `vite-plugin-imp` - 按需导入组件样式
+- `babel-plugin-import` - 按需导入组件样式
 - `autoprefixer` - H5 自动添加 CSS 前缀
 - `clsx` - 类名拼接工具
 
