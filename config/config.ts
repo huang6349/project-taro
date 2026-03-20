@@ -120,6 +120,7 @@ const config: UserConfigExport<'webpack5'> = {
             args: [{
               appType: 'taro',
               rem2rpx: !0,
+              injectAdditionalCssVarScope: !0,
             }],
           },
         },
