@@ -1,0 +1,42 @@
+.sys-drawer {
+  @apply fixed;
+  @apply right-0;
+  @apply bottom-0;
+  @apply left-0;
+  @apply w-full;
+  @apply bg-white;
+  @apply rounded-tl-lg;
+  @apply rounded-tr-lg;
+  @apply shadow-[-2px_-2px_12px_rgba(0,0,0,0.1)];
+  @apply touch-none;
+  @apply z-[1000];
+  @apply transition-all;
+  @apply duration-300;
+  @apply ease-[cubic-bezier(0.32,0.72,0,1)];
+
+  &--dragging {
+    @apply transition-none;
+  }
+
+  &__handle {
+    @apply flex;
+    @apply justify-center;
+    @apply items-center;
+    @apply pt-3;
+    @apply pb-2;
+  }
+
+  &__handle-bar {
+    @apply w-9;
+    @apply h-1;
+    @apply bg-[#d1d1d6];
+    @apply rounded-sm;
+    @apply mx-auto;
+  }
+
+  &__content {
+    @apply max-h-[70vh];
+    @apply overflow-y-auto;
+    @apply pb-[env(safe-area-inset-bottom)];
+  }
+}
