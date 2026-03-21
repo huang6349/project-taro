@@ -11,8 +11,6 @@ export interface SysDrawerProps {
   handle?: ReactNode;
   /** 初始状态，默认收起 */
   initialState?: PanelState;
-  /** 状态变化回调 */
-  onStateChange?: (state: PanelState) => void;
   /** 拖拽开始回调 */
   onDragStart?: () => void;
   /** 拖拽结束回调 */

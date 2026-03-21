@@ -22,7 +22,6 @@ const SysDrawer = (
     bottom,
     handle,
     initialState,
-    onStateChange,
     onDragStart,
     onDragEnd,
     children,
@@ -32,9 +31,15 @@ const SysDrawer = (
   const startYRef = useRef(0);
   /** 触摸起始高度 */
   const startHeightRef = useRef(0);
+  /** 触摸开始时间（用于计算速度） */
+  const startTimeRef = useRef(0);
   /** Drawer DOM 引用 */
   const drawerRef = useRef<any>(null);
+  /** 当前状态 */
+  const [currentState, setCurrentState] = useState<PanelState>('bottom');
   const [visibleHeight, setVisibleHeight] = useState(bottom);
+  /** 拖拽状态用 ref 避免重渲染，className 用 state */
+  const isDraggingRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
 
   /** 屏幕高度 */
@@ -47,7 +52,7 @@ const SysDrawer = (
     middle ?? windowHeight * 0.5
   ), [middle, windowHeight]);
 
-  // 初始化高度
+  // 初始化高度和状态
   useEffect(() => {
     const getInitialHeight = () => {
       switch (initialState) {
@@ -61,38 +66,56 @@ const SysDrawer = (
       }
     };
     setVisibleHeight(getInitialHeight());
+    setCurrentState(initialState ?? 'bottom');
   }, [initialState, middleHeight, bottom, windowHeight]);
 
   /** 触摸开始 */
   const handleTouchStart = useCallback((e: any) => {
     startYRef.current = e.touches[0].clientY;
     startHeightRef.current = visibleHeight;
-    setIsDragging(true);
+    startTimeRef.current = Date.now();
+    isDraggingRef.current = true;
+
+    // 直接移除 transition，完全避免 React 重渲染
+    const drawer = drawerRef.current;
+    if (drawer) {
+      drawer.style.transition = 'none';
+    }
+
     onDragStart?.();
   }, [visibleHeight, onDragStart]);
 
   /** 触摸移动 */
   const handleTouchMove = useCallback((e: any) => {
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
     const deltaY = startYRef.current - e.touches[0].clientY;
     const newHeight = Math.max(bottom, Math.min(windowHeight, startHeightRef.current + deltaY));
     // 直接操作 DOM 样式实现即时响应，避免 React state 批量更新的延迟
-    if (drawerRef.current) {
-      drawerRef.current.style.height = `${newHeight}px`;
+    const drawer = drawerRef.current;
+    if (drawer) {
+      drawer.style.height = `${newHeight}px`;
     }
-  }, [isDragging, bottom, windowHeight]);
+  }, [bottom, windowHeight]);
 
-  /** 触摸结束，停止拖拽 */
+  /** 触摸结束，保持当前位置 */
   const handleTouchEnd = useCallback(() => {
-    setIsDragging(false);
-    // 同步 DOM 最终高度到 React state，避免下次渲染时高度被重置
-    if (drawerRef.current) {
-      const domHeight = parseFloat(drawerRef.current.style.height);
-      if (!isNaN(domHeight)) {
-        setVisibleHeight(domHeight);
-      }
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    // 从DOM获取最终高度
+    const domHeight = parseFloat(drawer.style.height);
+    if (isNaN(domHeight)) {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+      return;
     }
-  }, []);
+
+    // 保持在当前位置
+    setVisibleHeight(domHeight);
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    onDragEnd?.(currentState);
+  }, [currentState, onDragEnd]);
 
   return (<View
     // 拖拽时禁用过渡动画

@@ -2,16 +2,7 @@
 module.exports = {
   content: ['./src/**/*.{html,js,jsx,ts,tsx}'],
   plugins: [],
-  theme: {
-    extend: {
-      transitionTimingFunction: {
-        'ios': 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-      },
-      transitionDuration: {
-        '250': '250ms',
-      },
-    },
-  },
+  theme: { extend: {} },
   corePlugins: {
     // 小程序不需要 preflight
     preflight: process.env.TARO_ENV === 'h5'
