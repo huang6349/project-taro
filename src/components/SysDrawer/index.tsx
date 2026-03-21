@@ -77,35 +77,10 @@ const SysDrawer = (
     setVisibleHeight(newHeight);
   }, [isDragging, bottom, windowHeight]);
 
-  /** 触摸结束，计算吸附状态 */
+  /** 触摸结束，停止拖拽 */
   const handleTouchEnd = useCallback(() => {
-    const currentHeight = visibleHeight;
-    const toBottomThreshold = bottom + (middleHeight - bottom) / 2;
-    const toTopThreshold = middleHeight + (windowHeight - middleHeight) / 2;
-
-    // 计算吸附目标
-    let snapState: PanelState;
-    if (currentHeight < toBottomThreshold) {
-      snapState = 'bottom';
-    } else if (currentHeight < toTopThreshold) {
-      snapState = 'middle';
-    } else {
-      snapState = 'top';
-    }
-
-    // 高度映射表
-    const heightMap: Record<PanelState, number> = {
-      top: windowHeight,
-      middle: middleHeight,
-      bottom,
-    };
-
-    // 更新高度并触发回调
-    setVisibleHeight(heightMap[snapState]);
-    onStateChange?.(snapState);
-    onDragEnd?.(snapState);
     setIsDragging(false);
-  }, [visibleHeight, bottom, middleHeight, windowHeight, onStateChange, onDragEnd]);
+  }, []);
 
   return (<View
     // 拖拽时禁用过渡动画
