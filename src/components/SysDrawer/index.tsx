@@ -113,7 +113,8 @@ const SysDrawer = (
     style={{ height: `${visibleHeight}px` }}
     onTouchStart={handleTouchStart}
     onTouchMove={handleTouchMove}
-    onTouchEnd={handleTouchEnd}>
+    onTouchEnd={handleTouchEnd}
+    catchMove>
     <View className="sys-drawer__handle">
       {/* 自定义把手或默认把手 */}
       {handle || <View className="sys-drawer__handle-bar" />}
