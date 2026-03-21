@@ -11,8 +11,8 @@
   @apply touch-none;
   @apply z-[1000];
   @apply transition-all;
-  @apply duration-300;
-  @apply ease-[cubic-bezier(0.32,0.72,0,1)];
+  @apply duration-250;
+  @apply ease-ios;
 
   &--dragging {
     @apply transition-none;
