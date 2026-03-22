@@ -3,6 +3,7 @@ import type { SysDrawerProps } from './types';
 import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useState } from 'react';
+import { useGetSet } from 'react-use';
 import { MovableArea } from '@tarojs/components';
 import { MovableView } from '@tarojs/components';
 import { View } from '@tarojs/components';
@@ -43,20 +44,23 @@ const SysDrawer = (
     }
   });
 
-  /** 记录上一次拖拽的 y 坐标，用于计算拖拽距离 */
-  const lastYRef = useRef(windowHeight - visibleHeight);
+  /** MovableView 的 y 坐标，实时响应拖拽变化 */
+  const [getMovableY, setMovableY] = useGetSet(windowHeight - visibleHeight);
 
-  /** 拖拽过程中更新 lastYRef */
+  /** 拖拽过程中更新 movableY */
   const handleChange = useCallback((e: any) => {
     // y 值限制：不能小于 windowHeight - bottom（对应高度不小于 bottom）
     const minY = windowHeight - bottom;
-    lastYRef.current = Math.min(e.detail.y, minY);
+    setMovableY(Math.min(e.detail.y, minY));
   }, [bottom, windowHeight]);
 
   /** 拖拽结束后根据高度判断最终状态并通知外部 */
   const handleChangeEnd = useCallback(() => {
-    const finalHeight = windowHeight - lastYRef.current;
+    const movableY = getMovableY();
+    const finalHeight = windowHeight - movableY;
     setVisibleHeight(finalHeight);
+    // 重置 movableY 初始值，与 visibleHeight 同步
+    setMovableY(windowHeight - finalHeight);
 
     // 根据高度判断最终状态（误差 10px）
     let state: PanelState = 'bottom';
@@ -73,10 +77,10 @@ const SysDrawer = (
     style={{ height: `calc(100vh - ${bottom}px)` }}>
     <MovableView
       className="sys-drawer"
-      y={windowHeight - visibleHeight}
-      direction="vertical"
+      direction="all"
       inertia={!1}
       outOfBounds={!1}
+      y={getMovableY()}
       onChange={handleChange}
       onChangeEnd={handleChangeEnd}>
       <View className="sys-drawer-panel">
