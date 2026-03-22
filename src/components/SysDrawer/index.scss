@@ -1,17 +1,21 @@
 .sys-drawer {
   @apply fixed;
+  @apply left-0;
   @apply w-screen;
+  @apply h-screen;
   @apply z-50;
 
-  &-area {
+  &-container {
     @apply fixed;
     @apply w-screen;
+    @apply h-screen;
     @apply z-0;
+    @apply overflow-hidden;
   }
 
   &-panel {
     @apply bg-white;
-    @apply h-screen;
+    @apply h-full;
     @apply rounded-tl-xl;
     @apply rounded-tr-xl;
     @apply shadow-md;

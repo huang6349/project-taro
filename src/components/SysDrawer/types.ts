@@ -15,6 +15,8 @@ export interface SysDrawerProps {
   onDragStart?: () => void;
   /** 拖拽结束回调 */
   onDragEnd?: (state: PanelState) => void;
+  /** 状态变更回调 */
+  onStateChange?: (state: PanelState) => void;
   /** 自定义内容 */
   children?: ReactNode;
 }
