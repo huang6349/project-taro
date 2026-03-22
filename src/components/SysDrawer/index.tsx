@@ -49,9 +49,7 @@ const SysDrawer = (
 
   /** 拖拽过程中更新 movableY */
   const handleChange = useCallback((e: any) => {
-    // y 值限制：不能小于 windowHeight - bottom（对应高度不小于 bottom）
-    const minY = windowHeight - bottom;
-    setMovableY(Math.min(e.detail.y, minY));
+    setMovableY(e.detail.y);
   }, [bottom, windowHeight]);
 
   /** 拖拽结束后根据高度判断最终状态并通知外部 */
@@ -80,7 +78,7 @@ const SysDrawer = (
       direction="all"
       inertia={!1}
       outOfBounds={!1}
-      y={getMovableY()}
+      y={windowHeight - visibleHeight}
       onChange={handleChange}
       onChangeEnd={handleChangeEnd}>
       <View className="sys-drawer-panel">
