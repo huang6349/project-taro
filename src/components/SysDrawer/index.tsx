@@ -10,10 +10,13 @@ import { clsx } from 'clsx';
 import './index.scss';
 
 /** 吸附动画时长 */
-const ANIMATION_DURATION = 200;
+const ANIMATION_DURATION = 175;
 
 /** 最小拖拽距离（防止点击误触） */
 const MIN_DRAG_DISTANCE = 10;
+
+/** fling 速度阈值（px/s），超过则强制吸附到方向终点 */
+const FLING_VELOCITY_THRESHOLD = 500;
 
 const SysDrawer = (
   props: SysDrawerProps,
@@ -76,6 +79,15 @@ const SysDrawer = (
   /** 拖拽开始的 top 值 */
   const startTopRef = useRef(0);
 
+  /** 最后一次 touchMove 的时间戳（用于计算速度） */
+  const lastMoveTimeRef = useRef(0);
+
+  /** 最后一次 touchMove 的 Y（用于计算速度） */
+  const lastMoveYRef = useRef(0);
+
+  /** 瞬时速度（px/s） */
+  const velocityRef = useRef(0);
+
   /**
    * 吸附到目标位置
    * @param target - 目标 top 值
@@ -95,12 +107,16 @@ const SysDrawer = (
     draggingRef.current = !0;
     startYRef.current = t.clientY;
     startTopRef.current = topRef.current;
+    lastMoveTimeRef.current = Date.now();
+    lastMoveYRef.current = startYRef.current;
+    velocityRef.current = 0;
     onDragStart?.();
   }, [onDragStart]);
 
   /**
    * 拖拽中：直接操作 DOM 避免 re-render
    * - 计算新的 top 值
+   * - 计算瞬时速度
    * - 应用边界限制
    * - 直接设置元素样式
    */
@@ -116,14 +132,24 @@ const SysDrawer = (
     // 边界限制：确保 top 在 [bounds.top, bounds.bottom] 范围内
     newTop = Math.max(bounds.top, Math.min(bounds.bottom, newTop));
 
+    // 计算瞬时速度
+    const now = Date.now();
+    const dt = now - lastMoveTimeRef.current;
+    if (dt > 0) {
+      const dy = t.clientY - lastMoveYRef.current;
+      velocityRef.current = dy / dt * 1000; // px/s
+    }
+    lastMoveTimeRef.current = now;
+    lastMoveYRef.current = t.clientY;
+
     drawerRef.current && (drawerRef.current.style.top = `${newTop}px`);
     topRef.current = newTop;
   }, [bounds]);
 
   /**
-   * 拖拽结束：根据方向和位置判断目标状态
-   * - 上滑：位置在 mid 以上 -> top，以下 -> middle
-   * - 下滑：位置在 mid 以下 -> bottom，以上 -> middle
+   * 拖拽结束：根据方向、位置和速度判断目标状态
+   * - fling（快速滑动）：强制吸附到方向终点
+   * - 普通滑动：根据位置 + 50% 阈值判断
    */
   const handleTouchEnd = useCallback(() => {
     if (!draggingRef.current) return;
@@ -136,14 +162,38 @@ const SysDrawer = (
     // 判断方向
     const dir = topRef.current < startTopRef.current ? 'up' : 'down';
 
+    // fling 检测：速度超过阈值时
+    const isFling = Math.abs(velocityRef.current) > FLING_VELOCITY_THRESHOLD;
+
+    // 手指移动距离
+    const moveDistance = Math.abs(topRef.current - startTopRef.current);
+
     // 判断目标状态
     let state: PanelState;
-    if (dir === 'up' && topRef.current < mid) {
-      state = 'top';
-    } else if (dir === 'down' && topRef.current > mid) {
-      state = 'bottom';
+    if (isFling) {
+      // fling：移动距离超过一定值才跳到终点，否则按位置判断
+      const flingDistanceThreshold = (pos.bottom - pos.top) * 0.5; // 移动超过 50% 才到终点
+      if (moveDistance >= flingDistanceThreshold) {
+        state = dir === 'up' ? 'top' : 'bottom';
+      } else {
+        // fling 但距离不够，按普通滑动处理
+        if (dir === 'up' && topRef.current < mid) {
+          state = 'top';
+        } else if (dir === 'down' && topRef.current > mid) {
+          state = 'bottom';
+        } else {
+          state = 'middle';
+        }
+      }
     } else {
-      state = 'middle';
+      // 普通滑动：根据位置 + mid 判断
+      if (dir === 'up' && topRef.current < mid) {
+        state = 'top';
+      } else if (dir === 'down' && topRef.current > mid) {
+        state = 'bottom';
+      } else {
+        state = 'middle';
+      }
     }
 
     snap(pos[state], () => {
@@ -162,7 +212,7 @@ const SysDrawer = (
       ref={drawerRef}
       className={clsx('sys-drawer')}
       style={{
-        transition: dragging ? 'none' : `top ${ANIMATION_DURATION}ms ease-out`,
+        transition: dragging ? 'none' : `top ${ANIMATION_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
         top: `${top}px`,
       }}>
       <View className="sys-drawer-panel">
