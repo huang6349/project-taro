@@ -1,28 +1,19 @@
 import type { PanelState } from './types';
 import type { SysDrawerProps } from './types';
 import { useCallback } from 'react';
-import { useMemo } from 'react';
 import { useRef } from 'react';
+import { useMemo } from 'react';
 import { useState } from 'react';
 import { View } from '@tarojs/components';
 import { getSystemInfoSync } from '@tarojs/taro';
+import { clsx } from 'clsx';
 import './index.scss';
 
-/** 触摸事件信息 */
-interface TouchInfo {
-  startY: number;
-  currentY: number;
-  deltaY: number;
-}
-
 /** 吸附动画时长 */
-const ANIMATION_DURATION = 150;
+const ANIMATION_DURATION = 200;
 
 /** 最小拖拽距离（防止点击误触） */
 const MIN_DRAG_DISTANCE = 10;
-
-/** 吸附阈值（位置过半时吸附到下一状态） */
-const SNAP_THRESHOLD = 0.5;
 
 const SysDrawer = (
   props: SysDrawerProps,
@@ -38,134 +29,141 @@ const SysDrawer = (
     children,
   } = props;
 
-  // 屏幕高度
+  /** 屏幕高度 */
   const windowHeight = useRef(
     getSystemInfoSync()?.windowHeight ?? 667,
   ).current;
 
-  // 各状态对应的 panelTop 值
-  const positions = useMemo(() => ({
-    top: 0,
-    middle: windowHeight - (middle ?? windowHeight * 0.5),
-    bottom: windowHeight - bottom,
-  }), [windowHeight, middle, bottom]);
+  /**
+   * 缓存计算值
+   * - pos: 三种状态对应的 top 值
+   * - bounds: top/bottom 边界
+   * - mid: 中间分界点
+   */
+  const {
+    pos,
+    bounds,
+    mid,
+  } = useMemo(() => {
+    const bottomTop = windowHeight - bottom;
+    return {
+      pos: { top: 0, middle: windowHeight - (middle ?? windowHeight * 0.5), bottom: bottomTop },
+      bounds: { top: 0, bottom: bottomTop },
+      mid: bottomTop / 2,
+    };
+  }, [windowHeight, middle, bottom]);
 
-  // 面板顶部距屏幕顶部的距离
-  const [panelTop, setPanelTop] = useState(() => (
-    positions[initialState]
+  /** 面板 top 值（触发渲染） */
+  const [top, setTop] = useState(() => (
+    pos[initialState]
   ));
 
-  // 拖拽过程中实时更新的位置（ref，用于动画计算）
-  const currentY = useRef(panelTop);
+  /** 是否拖拽中（控制 transition） */
+  const [dragging, setDragging] = useState(!1);
 
-  // 是否正在拖拽（控制 CSS transition）
-  const [isDragging, setIsDragging] = useState(!1);
+  /** top 实时值（用于计算，不触发渲染） */
+  const topRef = useRef(top);
 
-  // 是否正在拖拽（ref 版本，用于事件处理中立即读取）
-  const isDraggingRef = useRef(!1);
+  /** 抽屉 DOM ref（直接操作样式） */
+  const drawerRef = useRef<any>(null);
 
-  // 触摸信息
-  const touchInfo = useRef<TouchInfo>({
-    startY: 0,
-    currentY: 0,
-    deltaY: 0,
-  });
+  /** 是否拖拽中（事件处理中读取） */
+  const draggingRef = useRef(!1);
 
-  // 拖拽开始的 Y
-  const dragStartY = useRef(0);
+  /** 拖拽开始的触摸 Y */
+  const startYRef = useRef(0);
 
-  // 执行吸附动画
-  const animateTo = useCallback((targetTop: number, callback?: () => void) => {
-    setPanelTop(targetTop);
-    currentY.current = targetTop;
+  /** 拖拽开始的 top 值 */
+  const startTopRef = useRef(0);
 
-    if (callback) {
-      setTimeout(callback, ANIMATION_DURATION + 10);
-    }
+  /**
+   * 吸附到目标位置
+   * @param target - 目标 top 值
+   * @param cb - 动画结束回调
+   */
+  const snap = useCallback((target: number, cb?: () => void) => {
+    setTop(target);
+    topRef.current = target;
+    cb && setTimeout(cb, ANIMATION_DURATION + 10);
   }, []);
 
-  // 拖拽开始：记录起始位置，标记拖拽状态
+  /** 拖拽开始：记录起始位置和触摸点 */
   const handleTouchStart = useCallback((e: any) => {
-    const touch = e.touches?.[0];
-    if (!touch) return;
-
-    setIsDragging(!0);
-    isDraggingRef.current = !0;
-    touchInfo.current.startY = touch.clientY;
-    touchInfo.current.currentY = touch.clientY;
-    touchInfo.current.deltaY = 0;
-    dragStartY.current = currentY.current;
-
+    const t = e.touches?.[0];
+    if (!t) return;
+    setDragging(!0);
+    draggingRef.current = !0;
+    startYRef.current = t.clientY;
+    startTopRef.current = topRef.current;
     onDragStart?.();
   }, [onDragStart]);
 
-  // 拖拽中：实时更新面板位置，处理边界限制
+  /**
+   * 拖拽中：直接操作 DOM 避免 re-render
+   * - 计算新的 top 值
+   * - 应用边界限制
+   * - 直接设置元素样式
+   */
   const handleTouchMove = useCallback((e: any) => {
-    if (!isDraggingRef.current) return;
-
-    const touch = e.touches?.[0];
-    if (!touch) return;
-
+    if (!draggingRef.current) return;
+    const t = e.touches?.[0];
+    if (!t) return;
     e.preventDefault?.();
 
-    const deltaY = touch.clientY - touchInfo.current.startY;
-    let newTop = dragStartY.current + deltaY;
+    const delta = t.clientY - startYRef.current;
+    let newTop = startTopRef.current + delta;
 
-    // 边界限制：硬限制
-    newTop = Math.max(positions.top, Math.min(positions.bottom, newTop));
+    // 边界限制：确保 top 在 [bounds.top, bounds.bottom] 范围内
+    newTop = Math.max(bounds.top, Math.min(bounds.bottom, newTop));
 
-    touchInfo.current.currentY = touch.clientY;
-    touchInfo.current.deltaY = deltaY;
-    setPanelTop(newTop);
-    currentY.current = newTop;
-  }, [positions]);
+    drawerRef.current && (drawerRef.current.style.top = `${newTop}px`);
+    topRef.current = newTop;
+  }, [bounds]);
 
-  // 拖拽结束：根据位置和方向判断目标状态，触发吸附动画
+  /**
+   * 拖拽结束：根据方向和位置判断目标状态
+   * - 上滑：位置在 mid 以上 -> top，以下 -> middle
+   * - 下滑：位置在 mid 以下 -> bottom，以上 -> middle
+   */
   const handleTouchEnd = useCallback(() => {
-    if (!isDraggingRef.current) return;
-    setIsDragging(!1);
-    isDraggingRef.current = !1;
+    if (!draggingRef.current) return;
+    setDragging(!1);
+    draggingRef.current = !1;
 
-    const deltaY = touchInfo.current.deltaY;
+    // 移动距离过小视为点击
+    if (Math.abs(topRef.current - startTopRef.current) < MIN_DRAG_DISTANCE) return;
 
-    // 最小移动距离判断，防止点击误触发
-    if (Math.abs(deltaY) < MIN_DRAG_DISTANCE) {
-      return;
-    }
+    // 判断方向
+    const dir = topRef.current < startTopRef.current ? 'up' : 'down';
 
-    const direction: 'up' | 'down' = deltaY < 0 ? 'up' : 'down';
-
-    // 根据位置和方向判断目标状态
-    const threshold = (positions.top + positions.bottom) * SNAP_THRESHOLD;
-    let targetState: PanelState;
-
-    if (direction === 'up') {
-      // 上滑：展开
-      targetState = currentY.current < threshold ? 'top' : 'middle';
+    // 判断目标状态
+    let state: PanelState;
+    if (dir === 'up' && topRef.current < mid) {
+      state = 'top';
+    } else if (dir === 'down' && topRef.current > mid) {
+      state = 'bottom';
     } else {
-      // 下滑：收起
-      targetState = currentY.current > threshold ? 'bottom' : 'middle';
+      state = 'middle';
     }
 
-    const targetTop = positions[targetState];
-
-    animateTo(targetTop, () => {
-      onDragEnd?.(targetState);
-      onStateChange?.(targetState);
+    snap(pos[state], () => {
+      onDragEnd?.(state);
+      onStateChange?.(state);
     });
-  }, [animateTo, onDragEnd, onStateChange, positions]);
+  }, [snap, onDragEnd, onStateChange, pos, mid]);
 
   return (<View
     className="sys-drawer-container"
     onTouchStart={handleTouchStart}
     onTouchMove={handleTouchMove}
     onTouchEnd={handleTouchEnd}
-    catchMove>
+    catchMove={!0}>
     <View
-      className="sys-drawer"
+      ref={drawerRef}
+      className={clsx('sys-drawer')}
       style={{
-        top: `${panelTop}px`,
-        transition: isDragging ? 'none' : `top ${ANIMATION_DURATION}ms ease-out`,
+        transition: dragging ? 'none' : `top ${ANIMATION_DURATION}ms ease-out`,
+        top: `${top}px`,
       }}>
       <View className="sys-drawer-panel">
         <View className="sys-drawer__handle">
