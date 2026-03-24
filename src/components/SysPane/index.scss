@@ -45,6 +45,10 @@
     @apply duration-300;
     @apply ease-[cubic-bezier(0.32,0.72,0,1)];
   }
+
+  &.no-dim {
+    @apply shadow;
+  }
 }
 
 .pane-grip {

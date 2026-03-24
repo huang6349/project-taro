@@ -38,6 +38,8 @@ export interface SysPaneProps {
    * @default false
    */
   grabberVisible?: boolean;
+  /** 是否显示遮罩层 @default true */
+  dimVisible?: boolean;
   /** 不遮罩背景的最大吸附点索引，默认为 `-1` 表示始终遮罩。 @default -1 */
   largestUndimmedDetentIndex?: number;
   /** 面板是否为永久显示，无法关闭 @default false */

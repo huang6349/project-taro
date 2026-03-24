@@ -33,6 +33,7 @@ const SysPane: FC<SysPaneProps> = forwardRef<SysPaneRef, SysPaneProps>((
     className: cls,
     children,
     detents = DEFAULT_DETENTS,
+    dimVisible = !0,
     expansionSwitchThreshold = 50,
     grabberVisible = !1,
     largestUndimmedDetentIndex = -1,
@@ -136,7 +137,7 @@ const SysPane: FC<SysPaneProps> = forwardRef<SysPaneRef, SysPaneProps>((
   /** 最终 transform 值 */
   const resultingTransform = Math.max(transform + (opened ? -currentDetent : 0), -largestDetent);
   /** 是否显示遮罩层 */
-  const showDim = opened && currentDetentIndex > largestUndimmedDetentIndex;
+  const showDim = dimVisible && opened && currentDetentIndex > largestUndimmedDetentIndex;
   /** 是否启用过渡动画 */
   const shouldTransition = transform === 0;
 
@@ -177,7 +178,7 @@ const SysPane: FC<SysPaneProps> = forwardRef<SysPaneRef, SysPaneProps>((
     />
     {/* 面板主体 */}
     <View
-      className={clsx('pane', cls, { 'anim': shouldTransition })}
+      className={clsx('pane', cls, { 'anim': shouldTransition, 'no-dim': !showDim })}
       style={{
         height: `${largestDetent}px`,
         bottom: 0,
@@ -209,6 +210,7 @@ const SysPane: FC<SysPaneProps> = forwardRef<SysPaneRef, SysPaneProps>((
 
 SysPane.defaultProps = {
   detents: DEFAULT_DETENTS,
+  dimVisible: !0,
   largestUndimmedDetentIndex: -1,
   expansionSwitchThreshold: 50,
   permanent: !1,
