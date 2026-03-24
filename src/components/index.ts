@@ -1,1 +1,1 @@
-export { default as SysDrawer } from './SysDrawer';
+export { default as SysPane } from './SysPane';

@@ -1,0 +1,92 @@
+.pane-box {
+  @apply pointer-events-none;
+  @apply fixed;
+  @apply inset-0;
+  @apply overflow-hidden;
+  @apply overscroll-none;
+  @apply z-50;
+}
+
+.pane-dim {
+  @apply fixed;
+  @apply inset-0;
+  @apply transition-colors;
+
+  &.off {
+    @apply pointer-events-none;
+    @apply bg-zinc-950/0;
+  }
+
+  &.on {
+    @apply pointer-events-auto;
+    @apply touch-none;
+    @apply overscroll-none;
+    @apply bg-zinc-950/60;
+  }
+}
+
+.pane {
+  @apply pointer-events-auto;
+  @apply fixed;
+  @apply inset-x-0;
+  @apply mx-auto;
+  @apply flex;
+  @apply w-full;
+  @apply max-w-3xl;
+  @apply shrink-0;
+  @apply flex-col;
+  @apply rounded-t-lg;
+  @apply bg-white;
+  @apply drop-shadow-xl;
+  @apply will-change-transform;
+
+  &.anim {
+    @apply transition-transform;
+    @apply duration-300;
+    @apply ease-[cubic-bezier(0.32,0.72,0,1)];
+  }
+}
+
+.pane-grip {
+  @apply shrink-0;
+  @apply cursor-ns-resize;
+  @apply touch-none;
+  @apply justify-center;
+  @apply py-3;
+
+  &.off {
+    @apply hidden;
+  }
+
+  &.on {
+    @apply flex;
+  }
+}
+
+.grip-bar {
+  @apply h-1;
+  @apply w-8;
+  @apply rounded-full;
+  @apply bg-zinc-950/20;
+}
+
+.pane-body {
+  @apply h-full;
+  @apply overflow-y-auto;
+
+  &.scroll {
+    @apply overscroll-contain;
+  }
+
+  &.dragging {
+    @apply overscroll-none;
+  }
+
+  &.no-touch {
+    @apply touch-none;
+  }
+
+  &.has-grip {
+    @apply pt-3;
+  }
+}
