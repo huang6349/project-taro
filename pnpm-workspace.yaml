@@ -1,4 +1,5 @@
 allowBuilds:
+  '@nutui/nutui-react-taro': true
   '@swc/core': true
   '@tarojs/binding': true
   '@tarojs/cli': true
