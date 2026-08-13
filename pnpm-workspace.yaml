@@ -1,8 +1,8 @@
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@tarojs/binding'
-  - '@tarojs/cli'
-  - core-js
-  - core-js-pure
-  - esbuild
-  - weapp-tailwindcss
+allowBuilds:
+  '@swc/core': true
+  '@tarojs/binding': true
+  '@tarojs/cli': true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  weapp-tailwindcss: true

@@ -299,3 +299,6 @@ deploy_versions/
 .rn_temp/
 .swc
 *.local
+
+# Claude Code local tasks
+/.claude/tasks/
