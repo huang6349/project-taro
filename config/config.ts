@@ -49,6 +49,7 @@ const config: UserConfigExport<'webpack5'> = {
     '@/hocs': path.resolve(__dirname, '..', 'src/hocs'),
     '@/hofs': path.resolve(__dirname, '..', 'src/hofs'),
     '@/hooks': path.resolve(__dirname, '..', 'src/hooks'),
+    '@/pages': path.resolve(__dirname, '..', 'src/pages'),
     '@/utils': path.resolve(__dirname, '..', 'src/utils'),
   },
   // 文件复制配置
