@@ -1,3 +1,21 @@
+.sys-tabs {
+  @apply flex;
+  @apply flex-col;
+  @apply flex-1;
+  @apply overflow-hidden;
+
+  // 子界面面板
+  &__panel {
+    @apply flex-1;
+    @apply overflow-y-auto;
+  }
+
+  // 底部标签栏（flex 布局下防止被压缩）
+  &__tabbar {
+    @apply shrink-0;
+  }
+}
+
 .nut-tabbar {
   // 布局参数
   --nutui-tabbar-height: 54px;
