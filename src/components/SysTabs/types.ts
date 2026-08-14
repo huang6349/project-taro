@@ -12,6 +12,9 @@ export type SysTabsProps = Omit<
   ComponentProps<typeof Tabbar>,
   'value' | 'defaultValue' | 'onSwitch' | 'children'
 > & {
+  /** 切换时是否销毁非激活子界面，默认 false（懒挂载 + 保留，状态不丢失） */
+  destroyInactive?: boolean;
+  /** 子界面内容：SysTabs.Item 列表 */
   children: ReactNode;
 };
 
