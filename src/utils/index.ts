@@ -1,4 +1,5 @@
 export { default as safeRequest } from './safeRequest';
+export { default as refresh } from './refresh';
 export { default as token } from './token';
 export { default as delay } from './delay';
 export { default as isNilOrEmpty } from './isNilOrEmpty';

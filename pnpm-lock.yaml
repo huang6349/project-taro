@@ -14,6 +14,9 @@ importers:
       '@babel/runtime':
         specifier: 7.24.8
         version: 7.24.8
+      '@huang6349/taro-toolkit':
+        specifier: 0.0.29-beta.10
+        version: 0.0.29-beta.10(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
       '@nutui/icons-react-taro':
         specifier: 3.0.2
         version: 3.0.2
@@ -1554,6 +1557,15 @@ packages:
 
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
+
+  '@huang6349/taro-toolkit@0.0.29-beta.10':
+    resolution: {integrity: sha512-Zsv9MV4ZaoiPLuSCrT7llBCcdlWO+zmTtV/br7QMTPQ+PTWRkV6YWzNtLJ2g7DsCmnMAs4YDojIy/5E4hW6jQg==}
+    peerDependencies:
+      '@tarojs/taro': ^3.6.5
+      lodash-es: ^4.16.6
+      react: ^18.0.0
+      react-dom: ^18.0.0
+      react-use: ^17.4.0
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -8759,6 +8771,15 @@ snapshots:
   '@hapi/topo@5.1.0':
     dependencies:
       '@hapi/hoek': 9.3.0
+
+  '@huang6349/taro-toolkit@0.0.29-beta.10(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)':
+    dependencies:
+      '@babel/runtime': 7.24.8
+      '@tarojs/taro': 4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18)))
+      lodash-es: 4.17.22
+      react: 18.0.0
+      react-dom: 18.0.0(react@18.0.0)
+      react-use: 17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
