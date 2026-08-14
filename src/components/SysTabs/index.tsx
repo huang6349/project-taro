@@ -143,7 +143,7 @@ const SysTabs = (
         />);
       })}
     </View>
-    {/* 底部标签栏 */}
+    {/* 底部标签栏：默认 fixed 固定底部，下拉刷新/页面回弹时不随页面位移 */}
     <Tabbar
       className="sys-tabs__tabbar"
       {...tabbarProps}
@@ -157,6 +157,7 @@ const SysTabs = (
 };
 
 SysTabs.defaultProps = {
+  fixed: !0,
   destroyInactive: !1,
 };
 

@@ -1,16 +1,23 @@
 .sys-tabs {
+  // Tabbar 变量：提升到容器作用域（panels 与 tabbar 共享引用）
+  --nutui-tabbar-height: 54px;
+  // 上边框：Apple HIG separatorOpaque 官方分隔线色 #d9d9de
+  --nutui-tabbar-border-top: 0.5px solid #d9d9de;
+
   @apply flex;
   @apply flex-col;
   @apply flex-1;
   @apply overflow-hidden;
 
-  // 面板容器：占据 tabbar 上方全部空间
+  // 面板容器：占据 tabbar 上方全部空间；
+  // 底部留白补偿 fixed Tabbar 高度，避免内容被遮挡（安全区由面板内容自行处理，如 SysView safeArea）
   &__panels {
     @apply flex-1;
     @apply relative;
     @apply overflow-hidden;
     @apply flex;
     @apply flex-col;
+    @apply pb-[length:var(--nutui-tabbar-height)];
   }
 
   // 子界面面板
@@ -24,15 +31,9 @@
     }
   }
 
-  // 底部标签栏（flex 布局下防止被压缩）
+  // 底部标签栏（默认 fixed 固定底部，下拉刷新/页面回弹时不随页面位移；
+  // fixed=false 时保留在 flex 流中，shrink-0 防止被压缩）
   &__tabbar {
     @apply shrink-0;
   }
-}
-
-.nut-tabbar {
-  // 布局参数
-  --nutui-tabbar-height: 54px;
-  // 上边框：Apple HIG separatorOpaque 官方分隔线色 #d9d9de
-  --nutui-tabbar-border-top: 0.5px solid #d9d9de;
 }
