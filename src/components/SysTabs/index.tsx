@@ -1,5 +1,5 @@
+import type { SysTabsProps } from './types';
 import type { RenderItem } from './types';
-import type { SysTabBarProps } from './types';
 import { Tabbar } from '@nutui/nutui-react-taro';
 import { useSnapshot } from 'valtio';
 import { clsx } from 'clsx';
@@ -27,8 +27,8 @@ const renderItem: RenderItem = (
 };
 
 // ============== 组件 ==============
-const SysTabBar = (
-  props: SysTabBarProps,
+const SysTabs = (
+  props: SysTabsProps,
 ) => {
   // 1. Props 解构
   const {
@@ -55,4 +55,4 @@ const SysTabBar = (
   </Tabbar>);
 };
 
-export default SysTabBar;
+export default SysTabs;

@@ -3,16 +3,16 @@ import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
 import type { Tabbar } from '@nutui/nutui-react-taro';
 
-export type SysTabBarItem = {
+export type SysTabsItem = {
   text: string;
   icon: ReactNode;
 };
 
 export type RenderItem = (
-  item: SysTabBarItem,
+  item: SysTabsItem,
   index: number,
 ) => ReactElement;
 
-export type SysTabBarProps = ComponentProps<typeof Tabbar> & {
-  items: SysTabBarItem[];
+export type SysTabsProps = ComponentProps<typeof Tabbar> & {
+  items: SysTabsItem[];
 };
