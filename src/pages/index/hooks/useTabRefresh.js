@@ -26,11 +26,9 @@ const useTabRefresh = (index = 0) => {
     // 2. 注入刷新信号：
     //    active：懒挂载首屏下拉 + 切回静默 + 下拉回调守卫（非激活忽略）
     //    retapTick：点击当前 Tab 时下拉刷新
-    //    scrollContainer：面板子容器滚动守卫（滚动未在顶部时手势下拉不刷新）
     useRefresh(callback, {
       active: selected === index,
       retapTick,
-      scrollContainer: '.sys-tabs__panel',
     });
   };
 };

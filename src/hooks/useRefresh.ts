@@ -9,7 +9,6 @@ import { stopPullDownRefresh } from '@tarojs/taro';
 import { useDidShow } from '@tarojs/taro';
 import { getCurrentInstance } from '@tarojs/taro';
 import { usePullDownRefresh } from '@tarojs/taro';
-import { createSelectorQuery } from '@tarojs/taro';
 import { delay } from '@huang6349/taro-toolkit';
 import { print } from '@huang6349/taro-toolkit';
 import { isFunction } from 'lodash-es';
@@ -41,37 +40,6 @@ const getAnimLock = (page: object) => {
 /** 兜底锁 key：页面实例异常为空时共享（防御性，正常情况页面组件内 page 必非空） */
 const FALLBACK_PAGE = {};
 
-/**
- * 查询滚动位置（跨端）：视口滚动（全局生效）+ 指定容器滚动（可选，面板等子容器滚动场景）
- * - 小程序：selectViewport 取页面滚动位置；selector 时另查 selectAll().scrollOffset（多容器取最大）
- * - H5：window.scrollY + querySelector().scrollTop
- * @returns 视口与容器的最大滚动位置（0 = 全部在顶部）
- */
-const queryScrollTop = (selector?: string): Promise<number> => {
-  if (process.env.TARO_ENV === 'h5') {
-    const containerTop = selector
-      ? (document.querySelector(selector)?.scrollTop ?? 0)
-      : 0;
-    return Promise.resolve(Math.max(window.scrollY ?? 0, containerTop));
-  }
-  return new Promise((resolve) => {
-    const query = createSelectorQuery();
-    if (selector) {
-      query.selectAll(selector).scrollOffset();
-    }
-    query.selectViewport().scrollOffset().exec((res) => {
-      const hasContainer = Boolean(selector);
-      const containerTops = hasContainer
-        ? ((res?.[0] ?? []) as any[]).map((r) => r?.scrollTop ?? 0)
-        : [0];
-      const viewportTop = hasContainer
-        ? (res?.[1]?.[0]?.scrollTop ?? 0)
-        : (res?.[0]?.[0]?.scrollTop ?? 0);
-      resolve(Math.max(viewportTop, ...containerTops));
-    });
-  });
-};
-
 /** useRefresh 选项 */
 export type UseRefreshOptions = {
   /** 页面显示时静默刷新（默认 true；false 时仅 rf 变化才刷新） */
@@ -80,12 +48,6 @@ export type UseRefreshOptions = {
   active?: boolean;
   /** retap 信号（点击当前 Tab 派发）：变化且激活时拉起下拉刷新 */
   retapTick?: number;
-  /**
-   * 子容器滚动选择器（可选；默认 undefined = 仅视口校验）：
-   * 面板等子容器滚动场景传入（如 '.sys-tabs__panel'）——微信端子容器滚动时
-   * 页面 scrollTop 恒 0，仅查视口无法拦截中间位置下拉的误触发
-   */
-  scrollContainer?: string;
 };
 
 /**
@@ -120,7 +82,6 @@ const useRefresh = (
     refreshOnShow = !0,
     active,
     retapTick,
-    scrollContainer,
   } = options ?? {};
 
   // 1. 参数校验：非法回调给出警告，避免静默失败
@@ -141,13 +102,9 @@ const useRefresh = (
 
   // 3. 页面级动画锁（同一页面内跨实例互斥）
   const animLock = getAnimLock(getCurrentInstance().page ?? FALLBACK_PAGE);
-  // 编程触发标记：动画由程序拉起（首屏/retap/rf 变化）时置位，
-  // 下拉回调的滚动守卫跳过校验（用户主动意图，即使面板不在顶部也刷新）
-  const forceRef = useRef(!1);
 
   // 4. 拉起下拉动画（带锁）：动画进行中跳过，避免真机动画重触发；start 失败（如 H5 不支持）释放锁
   const pullDown = useCallback(async () => {
-    forceRef.current = !0;
     if (animLock.pending)
       return;
     animLock.pending = !0;
@@ -207,21 +164,6 @@ const useRefresh = (
       stopPullDownRefresh();
       return;
     }
-    // 滚动守卫：仅手势下拉校验（编程触发 forceRef 已置位跳过）——
-    // 任何滚动位置未在顶部都不刷新（视口滚动全局生效；scrollContainer 补充子容器场景，
-    // 微信端子容器滚动时页面 scrollTop 恒 0，面板中间位置下拉会误触发）
-    if (!forceRef.current) {
-      try {
-        const top = await queryScrollTop(scrollContainer);
-        if (top > 0) {
-          stopPullDownRefresh();
-          return;
-        }
-      } catch {
-        // 查询失败降级：不拦截（保持原行为）
-      }
-    }
-    forceRef.current = !1;
     try {
       await run();
       const rf = refresh.get();
