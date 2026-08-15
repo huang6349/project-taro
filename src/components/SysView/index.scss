@@ -1,11 +1,10 @@
-// 页面根容器
+// 页面根容器 .sys（两场景共用）：
+// - 独立使用：页面根，min-h-screen 占满视口
+// - SysTabs.Panel 场景：子容器，高度由 .sys.sys-tabs__panel 覆写（见 SysTabs/index.scss）
 .sys {
   @apply relative;
   @apply flex;
   @apply flex-col;
-  // 100dvh 适配移动端地址栏（iOS Safari / 小程序 WebView），
-  // 旧内核不支持时回退 100vh（声明顺序即 fallback）
   @apply min-h-screen;
-  @apply min-h-dvh;
   @apply bg-[#f7f8fa];
 }

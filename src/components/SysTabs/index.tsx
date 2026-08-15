@@ -1,95 +1,75 @@
-import type { ReactElement } from 'react';
-import type { ReactNode } from 'react';
-import type { SysTabsItemProps } from './types';
-import type { SysTabsPanelProps } from './types';
-import type { SysTabsProps } from './types';
-import type { TabsItemConfig } from './types';
+import type { SysTabsPanelProps, SysTabsProps } from './types';
 import { Tabbar } from '@nutui/nutui-react-taro';
-import { View } from '@tarojs/components';
-import { Children } from 'react';
-import { PanelActiveContext } from './context';
-import { isValidElement } from 'react';
 import { useCallback } from 'react';
+import { useEffect } from 'react';
 import { useMemo } from 'react';
 import { useState } from 'react';
+import { useLatest } from 'react-use';
 import { clsx } from 'clsx';
+import SysView from '../SysView';
 import './index.scss';
 
 const {
   TARO_APP_COLOR,
 } = process.env;
 
-/** SysTabs.Item 子项：纯配置载体，自身不渲染 DOM（配置由 SysTabs 提取） */
-const SysTabsItem = (
-  _props: SysTabsItemProps,
-) => null;
-
-/** 类型守卫：从 children 中筛出 SysTabs.Item 声明 */
-const isTabsItem = (
-  child: ReactNode,
-): child is ReactElement<SysTabsItemProps> => (
-  isValidElement(child) && child.type === SysTabsItem
-);
-
-/** 从 children 提取 Tab 配置（key 缺省时回落到渲染顺序索引） */
-const extractItems = (
-  children: ReactNode,
-): TabsItemConfig[] => (
-  Children.toArray(children)
-    .filter(isTabsItem)
-    .map((child, index) => ({
-      key: String(child.key ?? index),
-      title: child.props.title ?? '',
-      icon: child.props.icon,
-      content: child.props.children,
-    }))
-);
-
-/** 渲染 Tab 项 */
-const renderItem = (
-  item: TabsItemConfig,
-) => (<Tabbar.Item
-  key={item.key}
-  title={item.title}
-  icon={item.icon}
-/>);
-
-/** 单个面板：注入激活状态（面板内容通过 useRefresh 自动感知并刷新；内容为函数时额外传入激活态） */
+/**
+ * SysTabs.Panel：Tab 选项界面对应的懒挂载/保活容器（基于 SysView）
+ * - 懒挂载：首次 active 时才挂载 children（首屏只挂载默认 Tab）
+ * - 保活：访问后保持挂载，切走 display:none 隐藏（状态与滚动位置不丢失）
+ * - active 由外部受控（页面状态，如 valtio store）；内容中调用 useRefresh 可经
+ *   active/retapTick 信号自动刷新（首屏下拉 / 切回静默 / retap 下拉）
+ * - 基于 SysView：含 safeArea 能力，页面 Tab 内容无需再包 SysView
+ */
 const SysTabsPanel = (
   props: SysTabsPanelProps,
 ) => {
-  // 参数解构
+  // 1. Props 解构
   const {
-    item,
+    className: cls,
     active,
+    children,
+    ...viewProps
   } = props;
-  return (<PanelActiveContext.Provider value={active}>
-    <View
-      className={clsx('sys-tabs__panel', {
-        // 保留模式：非选中面板隐藏（display: none）但保持挂载
-        'sys-tabs__panel--hidden': !active,
-      })}>
-      {/* 内容为函数时传入激活态（面板级联动：激活时刷新等） */}
-      {typeof item.content === 'function' ? item.content(active) : item.content}
-    </View>
-  </PanelActiveContext.Provider>);
+
+  // 2. 已访问标记：首次激活时置位，此后保持挂载（保活）
+  const [visited, setVisited] = useState(active);
+  useEffect(() => {
+    if (active) {
+      setVisited(!0);
+    }
+  }, [active]);
+
+  // 3. 未访问过：不渲染（懒挂载，children 与其中的 Hook 副作用均不生效）
+  if (!visited) {
+    return null;
+  }
+
+  return (<SysView
+    className={clsx('sys-tabs__panel', cls, {
+      // 保留模式：非激活面板隐藏（display: none）但保持挂载
+      'sys-tabs__panel--hidden': !active,
+    })}
+    {...viewProps}>
+    {children}
+  </SysView>);
 };
 
-// ============== 组件 ==============
 /**
- * SysTabs：子组件式声明的 Tab 容器
- * - 子项通过 SysTabs.Item 声明（纯配置载体，内容为 children）
- * - 面板懒挂载 + 保留：首次选中时挂载，切走不销毁（destroyInactive=true 时切走销毁）
- * - 面板内容中调用 useRefresh 可自动感知激活态刷新（懒挂载首屏 + 每次切回）
+ * SysTabs：Tabbar 包装器（受控，纯标签栏，不含面板渲染）
+ * - items 声明 Tab 配置（key/title/icon）
+ * - value/onSwitch 受控：外部状态驱动（如 valtio store），点击只更新 active key，不走路由
+ * - 点击当前已选中 Tab 派发 onRetap（retap 刷新信号，页面刷新 Hook 自行响应）
+ * - 面板容器用 SysTabs.Panel（懒挂载 + 保活）
  *
  * 用法：
- * <SysTabs>
- *   <SysTabs.Item title="首页" icon={...}>
- *     面板内容
- *   </SysTabs.Item>
- * </SysTabs>
+ * <SysTabs
+ *   items={ITEMS}
+ *   value={snap.selected}
+ *   onSwitch={(v) => (state.selected = v)}
+ *   onRetap={() => (state.retapTick += 1)} />
  *
- * 其余 props 透传 NutUI Tabbar（如 inactiveColor、fixed 等）
+ * 其余 props 透传 NutUI Tabbar（inactiveColor 等；value/activeColor/safeArea/fixed 由默认值兜底）
  */
 const SysTabs = (
   props: SysTabsProps,
@@ -97,71 +77,66 @@ const SysTabs = (
   // 1. Props 解构：className 与业务 props 分离，其余透传 Tabbar
   const {
     className: cls,
-    destroyInactive,
-    children,
+    items,
+    value,
+    onSwitch,
+    onRetap,
+    activeColor,
+    safeArea,
+    fixed,
     ...tabbarProps
   } = props;
 
-  // 2. 内部状态（选中索引）
-  const [selected, setSelected] = useState(0);
-  // 已挂载面板索引集合（懒挂载：首次选中时挂载，之后保留不销毁，状态与滚动位置不丢失）
-  const [mounted, setMounted] = useState<Set<number>>(() => (
-    new Set([0])
-  ));
+  // 2. 最新引用：受控值经 ref 读取，handleSwitch 依赖稳定（引用稳定，减少 Tabbar 重渲染）
+  const valueRef = useLatest(value);
+  const onSwitchRef = useLatest(onSwitch);
+  const onRetapRef = useLatest(onRetap);
 
-  // 3. 计算属性：提取 Tab 配置（依赖 children，tab 切换时引用稳定）
-  const items = useMemo(() => (
-    extractItems(children)
-  ), [children]);
+  // 3. 计算属性：Tabbar.Item 列表（items 引用稳定时复用，减少 Tabbar 重渲染）
+  const tabbarItems = useMemo(() => (
+    items.map((item, index) => (
+      <Tabbar.Item
+        key={item.key ?? index}
+        title={item.title}
+        icon={item.icon}
+      />
+    ))
+  ), [items]);
 
-  // 4. 事件处理：切换 tab（引用稳定，减少 Tabbar 重渲染）
-  const handleSwitch = useCallback((value: number) => {
-    const next = value || 0;
-    // 更新选中态
-    setSelected(next);
-    // 懒挂载：标记新面板已挂载（保留模式不销毁）
-    if (!destroyInactive) {
-      setMounted(prev => new Set(prev).add(next));
-    } else return;
-  }, [destroyInactive]);
+  // 4. 事件处理：同值 = retap（点击当前 Tab），异值 = 切换
+  const handleSwitch = useCallback((next: number) => {
+    const v = next || 0;
+    if (v !== valueRef.current) {
+      onSwitchRef.current?.(v);
+    } else {
+      onRetapRef.current?.(v);
+    }
+  }, []);
 
-  // 5. 计算属性：面板数量变化时回落，避免选中索引越界
-  const safeSelected = Math.min(selected, items.length - 1);
-
-  return (<View
-    className={clsx('sys-tabs', cls)}>
-    {/* 子界面面板：懒挂载 + 保留（destroyInactive 时切走销毁） */}
-    <View className="sys-tabs__panels">
-      {items.map((item, index) => {
-        // 销毁模式仅渲染当前选中；保留模式仅渲染已挂载项
-        if (destroyInactive ? index !== safeSelected : !mounted.has(index)) {
-          return null;
-        } else return (<SysTabsPanel
-          key={item.key}
-          item={item}
-          active={index === safeSelected}
-        />);
-      })}
-    </View>
-    {/* 底部标签栏：默认 fixed 固定底部，下拉刷新/页面回弹时不随页面位移 */}
-    <Tabbar
-      className="sys-tabs__tabbar"
-      {...tabbarProps}
-      value={safeSelected}
-      activeColor={TARO_APP_COLOR}
-      safeArea={!0}
-      onSwitch={handleSwitch}>
-      {items.map(renderItem)}
-    </Tabbar>
-  </View>);
+  // 5. 状态守卫：无 Tab 配置时不渲染标签栏
+  if (!items.length) {
+    return null;
+  } else return (<Tabbar
+    className={clsx('sys-tabs__tabbar', cls)}
+    {...tabbarProps}
+    value={value}
+    activeColor={activeColor}
+    safeArea={safeArea}
+    fixed={fixed}
+    onSwitch={handleSwitch}>
+    {tabbarItems}
+  </Tabbar>);
 };
 
+// 默认 props：与 NutUI Tabbar 默认行为对齐（应用主题色、安全区、固定底部）
 SysTabs.defaultProps = {
+  value: 0,
+  activeColor: TARO_APP_COLOR,
+  safeArea: !0,
   fixed: !0,
-  destroyInactive: !1,
 };
 
 // 静态挂载子组件
-SysTabs.Item = SysTabsItem;
+SysTabs.Panel = SysTabsPanel;
 
 export default SysTabs;

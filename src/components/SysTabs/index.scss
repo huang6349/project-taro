@@ -1,39 +1,25 @@
-.sys-tabs {
-  // Tabbar 变量：提升到容器作用域（panels 与 tabbar 共享引用）
+// 底部标签栏（SysTabs）：fixed 固定底部，下拉刷新/页面回弹时不随页面位移；
+// fixed=false 时保留在 flex 流中，shrink-0 防止被压缩
+.sys-tabs__tabbar {
+  // Tabbar 变量：组件作用域内
   --nutui-tabbar-height: 54px;
   // 上边框：Apple HIG separatorOpaque 官方分隔线色 #d9d9de
   --nutui-tabbar-border-top: 0.5px solid #d9d9de;
+  @apply shrink-0;
+}
 
-  @apply flex;
-  @apply flex-col;
-  @apply flex-1;
-  @apply overflow-hidden;
+// 面板容器（SysTabs.Panel，基于 SysView）：自包含高度，内容溢出时面板内滚动
+// - 高度 = 视口 - Tabbar（54px） - 安全区：fixed Tabbar 不占布局，页面无需额外补偿
+// - 双类选择器提高特异性，覆写 SysView 的 min-h-screen（100vh）——否则最小高度盖过本高度，
+//   撑破容器（滚动滚出面板外区、内容被 Tabbar 遮挡）
+// - 54px 置于 var fallback：避免 pxTransform 将 calc 内 px 转 rpx 导致单位混算
+.sys.sys-tabs__panel {
+  @apply h-[calc(100vh-var(--nutui-tabbar-height,54px)-env(safe-area-inset-bottom))];
+  @apply overflow-y-auto;
+  @apply min-h-0;
 
-  // 面板容器：占据 tabbar 上方全部空间；
-  // 底部留白补偿 fixed Tabbar 高度，避免内容被遮挡（安全区由面板内容自行处理，如 SysView safeArea）
-  &__panels {
-    @apply flex-1;
-    @apply relative;
-    @apply overflow-hidden;
-    @apply flex;
-    @apply flex-col;
-    @apply pb-[length:var(--nutui-tabbar-height)];
-  }
-
-  // 子界面面板
-  &__panel {
-    @apply flex-1;
-    @apply overflow-y-auto;
-
-    // 非激活面板：保留挂载但隐藏
-    &--hidden {
-      @apply hidden;
-    }
-  }
-
-  // 底部标签栏（默认 fixed 固定底部，下拉刷新/页面回弹时不随页面位移；
-  // fixed=false 时保留在 flex 流中，shrink-0 防止被压缩）
-  &__tabbar {
-    @apply shrink-0;
+  // 非激活面板：保留挂载但隐藏
+  &--hidden {
+    @apply hidden;
   }
 }
