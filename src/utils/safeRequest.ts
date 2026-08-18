@@ -1,6 +1,5 @@
 import { createAlova } from 'alova';
-import { axiosRequestAdapter } from '@alova/adapter-axios';
-import ReactHook from 'alova/react';
+import AdapterTaro from '@alova/adapter-taro';
 import { showToast } from '@tarojs/taro';
 import { safeEq } from '@/utils';
 import { token } from '@/utils';
@@ -12,8 +11,7 @@ const {
 
 // 基于 alova 的请求封装：自动注入 Token、刷新 Token、401 跳转、业务错误处理
 const safeRequest = createAlova({
-  requestAdapter: axiosRequestAdapter(),
-  statesHook: ReactHook,
+  ...AdapterTaro(),
   shareRequest: !1,
   cacheFor: null,
   baseURL: TARO_APP_BASE_URL,

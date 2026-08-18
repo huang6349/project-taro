@@ -22,7 +22,7 @@
     "dev:harmony-hybrid": "npm run build:harmony-hybrid -- --watch"
   },
   "dependencies": {
-    "@alova/adapter-axios": "2.0.20",
+    "@alova/adapter-taro": "2.0.16",
     "@babel/runtime": "7.24.8",
     "@huang6349/taro-toolkit": "0.0.29-beta.10",
     "@nutui/icons-react-taro": "3.0.2",
@@ -45,7 +45,6 @@
     "@tarojs/shared": "4.2.1",
     "@tarojs/taro": "4.2.1",
     "alova": "3.4.1",
-    "axios": "1.13.6",
     "clsx": "2.1.1",
     "lodash-es": "4.17.22",
     "lucide-react-taro": "1.5.2",
