@@ -3,6 +3,16 @@
 module.exports = {
   plugins: [
     ['import', {
+      libraryName: '@nutui/nutui-react-taro',
+      camel2DashComponentName: !1,
+      customStyleName(/** @type {string} */ name) {
+        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style`;
+      },
+      customName(/** @type {string} */ name) {
+        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}`;
+      },
+    }, 'import-nutui-react'],
+    ['import', {
       libraryName: 'react-use',
       camel2DashComponentName: !1,
       customName(/** @type {string} */ name) {
@@ -13,17 +23,7 @@ module.exports = {
             : 'lib';
         return `react-use/${libraryDirectory}/${name}`;
       },
-    }, 'react-use'],
-    ['import', {
-      libraryName: '@nutui/nutui-react-taro',
-      camel2DashComponentName: !1,
-      customStyleName(/** @type {string} */ name) {
-        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}/style`;
-      },
-      customName(/** @type {string} */ name) {
-        return `@nutui/nutui-react-taro/dist/es/packages/${name.toLowerCase()}`;
-      },
-    }, 'nutui-react'],
+    }, 'import-react-use'],
   ],
   presets: [
     ['taro', {

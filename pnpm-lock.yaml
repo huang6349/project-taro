@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@alova/adapter-taro':
-        specifier: 2.0.16
-        version: 2.0.16(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(alova@3.4.1)
+        specifier: 2.0.15
+        version: 2.0.15(alova@3.4.1)
       '@babel/runtime':
         specifier: 7.24.8
         version: 7.24.8
       '@huang6349/taro-toolkit':
-        specifier: 0.0.29-beta.10
-        version: 0.0.29-beta.10(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
+        specifier: 0.0.29-beta.11
+        version: 0.0.29-beta.11(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
       '@nutui/icons-react-taro':
         specifier: 3.0.2
         version: 3.0.2
@@ -181,17 +181,13 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alova/adapter-taro@2.0.16':
-    resolution: {integrity: sha512-cuj/vJn1vzENW4yB6wy3e9oJdB5bV2YWNm8jNvPFqbuttb7lrkztvNfYVQPQLgFky/Zp5pe4rjtUzjwmDB/TCA==}
+  '@alova/adapter-taro@2.0.15':
+    resolution: {integrity: sha512-LhT5fc5o1iJ4P2lt/nx+gQztN3qFlLPMKvwM8ABMkMDCLUMbF3BS9KT17CmRJDy54b/4OsWxdDxHXEa75Z1AAw==}
     peerDependencies:
-      '@tarojs/taro': '>=3.6.0'
       alova: ^3.0.20
 
   '@alova/shared@1.3.2':
     resolution: {integrity: sha512-1XvDLWgYpVZ99MmLl1f3Fw4T6S6pPYk5afz5cwRVjuq8JXEGsDn9IygDKfvRyWqkqCBx7Jif07LIct1O+MVEow==}
-
-  '@alova/shared@1.3.3':
-    resolution: {integrity: sha512-sIXqkoG6gs/KlnpTOLQAxui5jocnJclkPJw0Gk2gT7kHxFLyTFiaMkZFqw4zTZciDRscBA+VUkyGBrMFlu5NIg==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -1555,8 +1551,8 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@huang6349/taro-toolkit@0.0.29-beta.10':
-    resolution: {integrity: sha512-Zsv9MV4ZaoiPLuSCrT7llBCcdlWO+zmTtV/br7QMTPQ+PTWRkV6YWzNtLJ2g7DsCmnMAs4YDojIy/5E4hW6jQg==}
+  '@huang6349/taro-toolkit@0.0.29-beta.11':
+    resolution: {integrity: sha512-095FpPBQ/jr3FTnB4sRvizLaNJLQi7aHDTT9mLiKfec5zU+O1fKp8Jp1Pq0b33WQ9prmlP36dtX0JB5kfqa6aQ==}
     peerDependencies:
       '@tarojs/taro': ^3.6.5
       lodash-es: ^4.16.6
@@ -7387,15 +7383,12 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alova/adapter-taro@2.0.16(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(alova@3.4.1)':
+  '@alova/adapter-taro@2.0.15(alova@3.4.1)':
     dependencies:
-      '@alova/shared': 1.3.3
-      '@tarojs/taro': 4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18)))
+      '@alova/shared': 1.3.2
       alova: 3.4.1
 
   '@alova/shared@1.3.2': {}
-
-  '@alova/shared@1.3.3': {}
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -8769,7 +8762,7 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@huang6349/taro-toolkit@0.0.29-beta.10(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)':
+  '@huang6349/taro-toolkit@0.0.29-beta.11(@tarojs/taro@4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(lodash-es@4.17.22)(react-dom@18.0.0(react@18.0.0))(react-use@17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)':
     dependencies:
       '@babel/runtime': 7.24.8
       '@tarojs/taro': 4.2.1(@tarojs/components@4.2.1(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(@tarojs/helper@4.2.1(@swc/helpers@0.5.18))(@tarojs/shared@4.2.1)(@types/react@18.0.38)(html-webpack-plugin@5.6.6(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(postcss@8.5.6)(rollup@3.29.5)(webpack-chain@6.5.1)(webpack-dev-server@4.15.2(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18))))(webpack@5.91.0(@swc/core@1.3.96(@swc/helpers@0.5.18)))
